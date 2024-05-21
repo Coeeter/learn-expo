@@ -8,9 +8,9 @@ import {
 } from '@react-navigation/native';
 import { useMigrations } from 'drizzle-orm/expo-sqlite/migrator';
 import { Link, SplashScreen, Stack } from 'expo-router';
+import { useEffect } from 'react';
 import { TouchableOpacity, useColorScheme } from 'react-native';
 import migrations from '../drizzle/migrations';
-import { useEffect } from 'react';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -44,14 +44,14 @@ function RootLayoutNavigation() {
           options={{
             headerLargeTitle: true,
             headerBlurEffect: 'regular',
-            headerTitle: 'Your Todos',
+            headerTitle: 'Your Notes',
             headerSearchBarOptions: {
-              placeholder: 'Search Todos',
+              placeholder: 'Search Notes',
               onChangeText: () => {},
             },
             headerRight: () => {
               return (
-                <Link href="todo" asChild>
+                <Link href="notes" asChild>
                   <TouchableOpacity activeOpacity={0.8}>
                     <MaterialIcons
                       name="add"
@@ -64,7 +64,7 @@ function RootLayoutNavigation() {
             },
           }}
         />
-        <Stack.Screen name="todo" options={{ presentation: 'modal' }} />
+        <Stack.Screen name="notes" options={{ presentation: 'modal' }} />
       </Stack>
     </ThemeProvider>
   );
