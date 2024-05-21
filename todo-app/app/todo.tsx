@@ -5,7 +5,9 @@ import { StyleSheet, View } from 'react-native';
 export default function CreateTodo() {
   return (
     <View style={styles.container}>
-      <Stack.Screen options={{ title: 'Create Todo' }} />
+      <Stack.Screen
+        options={{ title: 'Create Todo', headerLargeTitle: false }}
+      />
       <ThemedText type="title">Create a new Todo</ThemedText>
     </View>
   );

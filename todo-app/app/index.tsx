@@ -2,17 +2,26 @@ import ThemedText from '@/components/ThemedText';
 import useThemeColor from '@/hooks/useThemeColor';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Link, Stack } from 'expo-router';
-import { StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, useColorScheme, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 export default function Home() {
+  const theme = useColorScheme() ?? 'light';
   const buttonBackgroundColor = useThemeColor('primary');
+  const backgroundColor = useThemeColor('background');
   const buttonTextColor = useThemeColor('primaryForeground');
 
   return (
-    <View style={styles.container}>
-      <Stack.Screen options={{ title: 'Home' }} />
-      <View style={styles.todosContainer}>
+    <ScrollView
+      style={styles.container}
+      contentInsetAdjustmentBehavior="automatic"
+    >
+      <Stack.Screen
+        options={{
+          headerTitle: 'Your Todos',
+        }}
+      />
+      <View>
         <ThemedText>TODO: Add a list of todos here</ThemedText>
       </View>
       <Link
@@ -31,18 +40,14 @@ export default function Home() {
           </ThemedText>
         </TouchableOpacity>
       </Link>
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     padding: 16,
-    flex: 1,
-    paddingBottom: 32,
-  },
-  todosContainer: {
-    flex: 1,
   },
   button: {
     padding: 16,
