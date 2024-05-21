@@ -1,44 +1,71 @@
+import { db } from '@/db';
 import useThemeColor from '@/hooks/useThemeColor';
+import { MaterialIcons } from '@expo/vector-icons';
 import {
   DarkTheme,
   DefaultTheme,
   ThemeProvider,
 } from '@react-navigation/native';
-import { Stack } from 'expo-router';
-import { useColorScheme } from 'react-native';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { useMigrations } from 'drizzle-orm/expo-sqlite/migrator';
+import { Link, SplashScreen, Stack } from 'expo-router';
+import { TouchableOpacity, useColorScheme } from 'react-native';
+import migrations from '../drizzle/migrations';
+import { useEffect } from 'react';
+
+SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  const theme = useColorScheme() ?? 'light';
+  const { success, error } = useMigrations(db, migrations);
 
-  const backgroundColor = useThemeColor('background');
+  useEffect(() => {
+    if (success) {
+      SplashScreen.hideAsync();
+    }
+
+    if (error) {
+      throw error;
+    }
+  }, [success, error]);
+
+  if (!success) return null;
+
+  return <RootLayoutNavigation />;
+}
+
+function RootLayoutNavigation() {
+  const theme = useColorScheme() ?? 'light';
+  const buttonTextColor = useThemeColor('primaryForeground');
 
   return (
-    <SafeAreaProvider>
-      <GestureHandlerRootView>
-        <ThemeProvider value={theme === 'dark' ? DarkTheme : DefaultTheme}>
-          <Stack
-            screenOptions={{
-              contentStyle: {
-                backgroundColor,
-              },
-              headerStyle: {
-                backgroundColor:
-                  theme === 'dark'
-                    ? 'rgba(30, 30, 30, 0.5)'
-                    : 'rgba(255, 255, 255, 0.5)',
-              },
-              headerTransparent: true,
-              headerLargeTitle: true,
-              headerBlurEffect: 'regular',
-              headerLargeStyle: {
-                backgroundColor: backgroundColor,
-              },
-            }}
-          />
-        </ThemeProvider>
-      </GestureHandlerRootView>
-    </SafeAreaProvider>
+    <ThemeProvider value={theme === 'dark' ? DarkTheme : DefaultTheme}>
+      <Stack>
+        <Stack.Screen
+          name="index"
+          options={{
+            headerLargeTitle: true,
+            headerBlurEffect: 'regular',
+            headerTitle: 'Your Todos',
+            headerSearchBarOptions: {
+              placeholder: 'Search Todos',
+              onChangeText: () => {},
+            },
+            headerRight: () => {
+              return (
+                <Link href="todo" asChild>
+                  <TouchableOpacity activeOpacity={0.8}>
+                    <MaterialIcons
+                      name="add"
+                      size={24}
+                      color={buttonTextColor}
+                    />
+                  </TouchableOpacity>
+                </Link>
+              );
+            },
+          }}
+        />
+        <Stack.Screen name="todo" options={{ presentation: 'modal' }} />
+      </Stack>
+    </ThemeProvider>
   );
 }
