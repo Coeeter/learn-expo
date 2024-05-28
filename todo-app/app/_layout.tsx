@@ -1,4 +1,5 @@
 import { db } from '@/db';
+import { useSearchStore } from '@/hooks/useSearch';
 import useThemeColor from '@/hooks/useThemeColor';
 import { MaterialIcons } from '@expo/vector-icons';
 import {
@@ -6,13 +7,12 @@ import {
   DefaultTheme,
   ThemeProvider,
 } from '@react-navigation/native';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useMigrations } from 'drizzle-orm/expo-sqlite/migrator';
 import { Link, SplashScreen, Stack } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { TouchableOpacity, useColorScheme } from 'react-native';
 import migrations from '../drizzle/migrations';
-import { useSearchStore } from '@/hooks/useSearch';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 SplashScreen.preventAutoHideAsync();
 

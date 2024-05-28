@@ -3,15 +3,8 @@ import { db } from '@/db';
 import { useSearchStore } from '@/hooks/useSearch';
 import useThemeColor from '@/hooks/useThemeColor';
 import { useQuery } from '@tanstack/react-query';
-import { useNavigation, useRouter } from 'expo-router';
-import {
-  FlatList,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  useColorScheme,
-  View,
-} from 'react-native';
+import { useRouter } from 'expo-router';
+import { FlatList, Pressable, StyleSheet, useColorScheme } from 'react-native';
 
 export default function Home() {
   const { push } = useRouter();
