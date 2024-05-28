@@ -13,6 +13,7 @@ const Colors = {
     tabIconSelected: tintColorLight,
     primary: tintColorLight,
     primaryForeground: 'black',
+    mutedBackground: 'white',
   },
   dark: {
     text: '#ECEDEE',
@@ -23,6 +24,7 @@ const Colors = {
     tabIconSelected: tintColorDark,
     primary: tintColorDark,
     primaryForeground: '#fff',
+    mutedBackground: '#11181C',
   },
 };
 

@@ -8,9 +8,11 @@ import {
 } from '@react-navigation/native';
 import { useMigrations } from 'drizzle-orm/expo-sqlite/migrator';
 import { Link, SplashScreen, Stack } from 'expo-router';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { TouchableOpacity, useColorScheme } from 'react-native';
 import migrations from '../drizzle/migrations';
+import { useSearchStore } from '@/hooks/useSearch';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -35,37 +37,41 @@ export default function RootLayout() {
 function RootLayoutNavigation() {
   const theme = useColorScheme() ?? 'light';
   const buttonTextColor = useThemeColor('primaryForeground');
+  const setQuery = useSearchStore(state => state.setQuery);
+  const [queryClient] = useState(() => new QueryClient());
 
   return (
-    <ThemeProvider value={theme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen
-          name="index"
-          options={{
-            headerLargeTitle: true,
-            headerBlurEffect: 'regular',
-            headerTitle: 'Your Notes',
-            headerSearchBarOptions: {
-              placeholder: 'Search Notes',
-              onChangeText: () => {},
-            },
-            headerRight: () => {
-              return (
-                <Link href="notes" asChild>
-                  <TouchableOpacity activeOpacity={0.8}>
-                    <MaterialIcons
-                      name="add"
-                      size={24}
-                      color={buttonTextColor}
-                    />
-                  </TouchableOpacity>
-                </Link>
-              );
-            },
-          }}
-        />
-        <Stack.Screen name="notes" options={{ presentation: 'modal' }} />
-      </Stack>
-    </ThemeProvider>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider value={theme === 'dark' ? DarkTheme : DefaultTheme}>
+        <Stack>
+          <Stack.Screen
+            name="index"
+            options={{
+              headerLargeTitle: true,
+              headerBlurEffect: 'regular',
+              headerTitle: 'Your Notes',
+              headerSearchBarOptions: {
+                placeholder: 'Search Notes',
+                onChangeText: event => setQuery(event.nativeEvent.text),
+              },
+              headerRight: () => {
+                return (
+                  <Link href="notes" asChild>
+                    <TouchableOpacity activeOpacity={0.8}>
+                      <MaterialIcons
+                        name="add"
+                        size={24}
+                        color={buttonTextColor}
+                      />
+                    </TouchableOpacity>
+                  </Link>
+                );
+              },
+            }}
+          />
+          <Stack.Screen name="notes" options={{ presentation: 'modal' }} />
+        </Stack>
+      </ThemeProvider>
+    </QueryClientProvider>
   );
 }
